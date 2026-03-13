@@ -103,9 +103,14 @@ latex_label = st.text_input(
     help="将写入 \\label{...}",
 )
 use_xhline = st.checkbox("使用 \\Xhline{1pt}（需要 makecell 包）", value=True)
+mark_top2 = st.checkbox("每行标记最大/次大值（不含第一列）", value=True)
 
 latex_code = dataframe_to_latex_table(
-    result.dataframe, caption=latex_caption, label=latex_label, use_xhline=use_xhline
+    result.dataframe,
+    caption=latex_caption,
+    label=latex_label,
+    use_xhline=use_xhline,
+    mark_top2_per_row=mark_top2,
 )
 
 if latex_code:
