@@ -9,6 +9,7 @@ import streamlit as st
 import pytesseract
 from shutil import which
 
+from latex_export import dataframe_to_latex_table
 from table_extractor import extract_table_to_dataframe
 
 
@@ -89,3 +90,29 @@ st.download_button(
     file_name="table_result.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 )
+
+st.subheader("LaTeX 表格代码")
+latex_caption = st.text_input(
+    "LaTeX Caption",
+    value="OCR extracted table.",
+    help="将写入 \\caption{...}",
+)
+latex_label = st.text_input(
+    "LaTeX Label",
+    value="tab:ocr_result",
+    help="将写入 \\label{...}",
+)
+use_xhline = st.checkbox("使用 \\Xhline{1pt}（需要 makecell 包）", value=True)
+
+latex_code = dataframe_to_latex_table(
+    result.dataframe, caption=latex_caption, label=latex_label, use_xhline=use_xhline
+)
+
+if latex_code:
+    st.code(latex_code, language="latex")
+    st.download_button(
+        label="下载 LaTeX (.tex)",
+        data=latex_code.encode("utf-8"),
+        file_name="table_result.tex",
+        mime="text/x-tex",
+    )
